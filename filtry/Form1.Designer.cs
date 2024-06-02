@@ -201,7 +201,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(512, 512);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // pictureBox2
             // 
@@ -457,7 +456,6 @@
             this.radioButton6.TabIndex = 91;
             this.radioButton6.Text = "Filtry wykrywające krawędzie poziome";
             this.radioButton6.UseVisualStyleBackColor = true;
-            this.radioButton6.CheckedChanged += new System.EventHandler(this.radioButton6_CheckedChanged);
             // 
             // radioButton5
             // 
@@ -478,7 +476,6 @@
             this.radioButton4.TabIndex = 89;
             this.radioButton4.Text = "Filtr górnoprzepustowy";
             this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
             // 
             // textBox77
             // 
@@ -997,7 +994,6 @@
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(20, 20);
             this.textBox10.TabIndex = 15;
-            this.textBox10.TextChanged += new System.EventHandler(this.textBox10_TextChanged);
             // 
             // textBox9
             // 
@@ -1070,7 +1066,6 @@
             this.textBox1.Size = new System.Drawing.Size(20, 20);
             this.textBox1.TabIndex = 6;
             this.textBox1.Text = "-1";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // radioButton3
             // 
@@ -1081,7 +1076,6 @@
             this.radioButton3.TabIndex = 5;
             this.radioButton3.Text = "Filtr 7x7";
             this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
             // 
             // radioButton2
             // 
@@ -1092,7 +1086,6 @@
             this.radioButton2.TabIndex = 4;
             this.radioButton2.Text = "Filtr 5x5";
             this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // radioButton1
             // 
@@ -1105,7 +1098,6 @@
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Filtr 3x3";
             this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // tabPage3
             // 
@@ -1343,7 +1335,6 @@
             this.textBox93.Name = "textBox93";
             this.textBox93.Size = new System.Drawing.Size(54, 20);
             this.textBox93.TabIndex = 19;
-            this.textBox93.TextChanged += new System.EventHandler(this.textBox93_TextChanged);
             // 
             // textBox94
             // 
@@ -1352,7 +1343,6 @@
             this.textBox94.Name = "textBox94";
             this.textBox94.Size = new System.Drawing.Size(57, 20);
             this.textBox94.TabIndex = 18;
-            this.textBox94.TextChanged += new System.EventHandler(this.textBox94_TextChanged);
             // 
             // textBox95
             // 
@@ -1361,7 +1351,6 @@
             this.textBox95.Name = "textBox95";
             this.textBox95.Size = new System.Drawing.Size(60, 20);
             this.textBox95.TabIndex = 17;
-            this.textBox95.TextChanged += new System.EventHandler(this.textBox95_TextChanged);
             // 
             // textBox90
             // 
@@ -1370,7 +1359,6 @@
             this.textBox90.Name = "textBox90";
             this.textBox90.Size = new System.Drawing.Size(54, 20);
             this.textBox90.TabIndex = 16;
-            this.textBox90.TextChanged += new System.EventHandler(this.textBox90_TextChanged);
             // 
             // textBox91
             // 
@@ -1379,7 +1367,6 @@
             this.textBox91.Name = "textBox91";
             this.textBox91.Size = new System.Drawing.Size(57, 20);
             this.textBox91.TabIndex = 15;
-            this.textBox91.TextChanged += new System.EventHandler(this.textBox91_TextChanged);
             // 
             // textBox92
             // 
@@ -1388,7 +1375,6 @@
             this.textBox92.Name = "textBox92";
             this.textBox92.Size = new System.Drawing.Size(60, 20);
             this.textBox92.TabIndex = 14;
-            this.textBox92.TextChanged += new System.EventHandler(this.textBox92_TextChanged);
             // 
             // textBox89
             // 
@@ -1398,7 +1384,6 @@
             this.textBox89.Size = new System.Drawing.Size(60, 20);
             this.textBox89.TabIndex = 13;
             this.textBox89.Text = "128";
-            this.textBox89.TextChanged += new System.EventHandler(this.textBox89_TextChanged);
             // 
             // textBox88
             // 
@@ -1408,7 +1393,6 @@
             this.textBox88.Size = new System.Drawing.Size(57, 20);
             this.textBox88.TabIndex = 12;
             this.textBox88.Text = "128";
-            this.textBox88.TextChanged += new System.EventHandler(this.textBox88_TextChanged);
             // 
             // label5
             // 
@@ -1436,7 +1420,6 @@
             this.label3.Size = new System.Drawing.Size(30, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "RGB";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // textBox87
             // 
@@ -1446,7 +1429,6 @@
             this.textBox87.Size = new System.Drawing.Size(54, 20);
             this.textBox87.TabIndex = 8;
             this.textBox87.Text = "128";
-            this.textBox87.TextChanged += new System.EventHandler(this.textBox87_TextChanged);
             // 
             // button9
             // 
@@ -1525,7 +1507,6 @@
             this.chart1.Size = new System.Drawing.Size(725, 350);
             this.chart1.TabIndex = 21;
             this.chart1.Text = "chart1";
-            this.chart1.Click += new System.EventHandler(this.chart1_Click);
             // 
             // label6
             // 
@@ -1535,7 +1516,6 @@
             this.label6.Size = new System.Drawing.Size(97, 13);
             this.label6.TabIndex = 22;
             this.label6.Text = "Histogram Szarości";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // Form1
             // 
