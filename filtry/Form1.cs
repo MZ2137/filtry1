@@ -28,9 +28,6 @@ namespace filtry
 
                     pictureBox1.Image = oryginalImage;
                     pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-
-                    pictureBox2.Image = maska(oryginalImage);
-                    pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
                 }
             }
         }
@@ -54,14 +51,18 @@ namespace filtry
             bool isRadioButton7Checked = radioButton7.Checked; //k pionowe
             bool isRadioButton8Checked = radioButton8.Checked; //k ukośne
             bool isRadioButton9Checked = radioButton9.Checked; //k combo
+            bool isRadioButton10Checked = radioButton10.Checked; //k medianowy
+            bool isRadioButton11Checked = radioButton11.Checked; //k minimalny
+            bool isRadioButton12Checked = radioButton12.Checked; //k maksymalny
 
             Bitmap resultImage = new Bitmap(originalImage.Width, originalImage.Height);
             Color pixel;
             int r, g, b;
-            int avgR, avgG, avgB;
+            int maskSum = 0;
 
             if (isRadioButton1Checked)
             {
+                
                 mask1[0, 0] = int.Parse(textBox7.Text);
                 mask1[0, 1] = int.Parse(textBox8.Text);
                 mask1[0, 2] = int.Parse(textBox9.Text);
@@ -80,24 +81,32 @@ namespace filtry
 
                         for (int i = 0; i <= 2; i++)
                         {
+                            maskSum = 0;
                             for (int j = 0; j <= 2; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), 512), Math.Min(Math.Max(y - (1 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
+                                //dla pixela 0x0, 0 - (1 + 0) teoretycznie wychodzi poza zakres
+                                //ale Math.Min i Math.Max o wartościach od 0 do originalImage.Width/Height powiela piksele graniczne
                                 r += pixel.R * mask1[i, j];
                                 g += pixel.G * mask1[i, j];
                                 b += pixel.B * mask1[i, j];
+                                maskSum += mask1[i, j];
                             }
                         }
+                        //normalizacja dla nietypowych filtrów
+                        if(maskSum != 0)
+                        {
+                            r /= maskSum;
+                            g /= maskSum;
+                            b /= maskSum;
+                        }
+                        
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
-
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
             }
@@ -138,24 +147,29 @@ namespace filtry
 
                         for (int i = 0; i <= 4; i++)
                         {
+                            maskSum = 0;
                             for (int j = 0; j <= 4; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (4 + i), 0), 512), Math.Min(Math.Max(y - (4 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
                                 r += pixel.R * mask2[i, j];
                                 g += pixel.G * mask2[i, j];
                                 b += pixel.B * mask2[i, j];
+                                maskSum += mask2[i, j];
                             }
                         }
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
+                        if (maskSum != 0)
+                        {
+                            r /= maskSum;
+                            g /= maskSum;
+                            b /= maskSum;
+                        }
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
             }
@@ -226,24 +240,29 @@ namespace filtry
 
                         for (int i = 0; i <= 6; i++)
                         {
+                            maskSum = 0;
                             for (int j = 0; j <= 6; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), 512), Math.Min(Math.Max(y - (1 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
                                 r += pixel.R * mask3[i, j];
                                 g += pixel.G * mask3[i, j];
                                 b += pixel.B * mask3[i, j];
+                                maskSum += mask3[i, j];
                             }
                         }
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
+                        if (maskSum != 0)
+                        {
+                            r /= maskSum;
+                            g /= maskSum;
+                            b /= maskSum;
+                        }
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
             }
@@ -251,8 +270,8 @@ namespace filtry
             {
                 int[,] mask =
                 {
-                    {-1, -1, -1 },
-                    {-1, -9, -1},
+                    {-1, -1, -1},
+                    {-1, 9, -1},
                     {-1, -1, 1},
                 };
 
@@ -266,22 +285,18 @@ namespace filtry
                         {
                             for (int j = 0; j <= 2; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), 512), Math.Min(Math.Max(y - (1 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
                                 r += pixel.R * mask[i, j];
                                 g += pixel.G * mask[i, j];
                                 b += pixel.B * mask[i, j];
                             }
                         }
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
-
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
             }
@@ -304,22 +319,22 @@ namespace filtry
                         {
                             for (int j = 0; j <= 2; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), 512), Math.Min(Math.Max(y - (1 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
                                 r += pixel.R * mask[i, j];
                                 g += pixel.G * mask[i, j];
                                 b += pixel.B * mask[i, j];
                             }
                         }
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
+                        r /= 9;
+                        g /= 9;
+                        b /= 9;
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
             }
@@ -342,22 +357,18 @@ namespace filtry
                         {
                             for (int j = 0; j <= 2; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), 512), Math.Min(Math.Max(y - (1 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
                                 r += pixel.R * mask[i, j];
                                 g += pixel.G * mask[i, j];
                                 b += pixel.B * mask[i, j];
                             }
                         }
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
-
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
             }
@@ -380,22 +391,18 @@ namespace filtry
                         {
                             for (int j = 0; j <= 2; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), 512), Math.Min(Math.Max(y - (1 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
                                 r += pixel.R * mask[i, j];
                                 g += pixel.G * mask[i, j];
                                 b += pixel.B * mask[i, j];
                             }
                         }
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
-
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
             }
@@ -418,22 +425,18 @@ namespace filtry
                         {
                             for (int j = 0; j <= 2; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), 512), Math.Min(Math.Max(y - (1 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
                                 r += pixel.R * mask[i, j];
                                 g += pixel.G * mask[i, j];
                                 b += pixel.B * mask[i, j];
                             }
                         }
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
-
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
             }
@@ -468,7 +471,7 @@ namespace filtry
                         {
                             for (int j = 0; j <= 2; j++)
                             {
-                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), 512), Math.Min(Math.Max(y - (1 + j), 0), 512));
+                                pixel = originalImage.GetPixel(Math.Min(Math.Max(x - (1 + i), 0), originalImage.Width), Math.Min(Math.Max(y - (1 + j), 0), originalImage.Height));
                                 r += pixel.R * maskX[i, j];
                                 g += pixel.G * maskX[i, j];
                                 b += pixel.B * maskX[i, j];
@@ -481,21 +484,105 @@ namespace filtry
                             }
                         }
 
-                        avgR = r / 9;
-                        avgG = g / 9;
-                        avgB = b / 9;
 
-                        avgR = Math.Min(Math.Max(avgR, 0), 255);
-                        avgG = Math.Min(Math.Max(avgG, 0), 255);
-                        avgB = Math.Min(Math.Max(avgB, 0), 255);
+                        r = Math.Min(Math.Max(r, 0), 255);
+                        g = Math.Min(Math.Max(g, 0), 255);
+                        b = Math.Min(Math.Max(b, 0), 255);
 
-                        resultImage.SetPixel(x, y, Color.FromArgb(avgR, avgG, avgB));
+                        resultImage.SetPixel(x, y, Color.FromArgb(r, g, b));
                     }
                 }
-
-
-
             }
+            //trochę inne podejście do granicy obrazu w przykładzie 10, 11 i 12, ale rónież powiela piksele z kranca zakresu
+            else if (isRadioButton10Checked/*mediana*/)
+            {
+                int[] redValues = new int[9];
+                int[] greenValues = new int[9];
+                int[] blueValues = new int[9];
+
+                for (int x = 0; x < originalImage.Width; x++)
+                {
+                    for (int y = 0; y < originalImage.Height; y++)
+                    {
+                        int index = 0;
+                        for (int i = -1; i <= 1; i++)
+                        {
+                            for (int j = -1; j <= 1; j++)
+                            {
+                                int newX = Math.Min(Math.Max(x + i, 0), originalImage.Width - 1);
+                                int newY = Math.Min(Math.Max(y + j, 0), originalImage.Height - 1);
+                                pixel = originalImage.GetPixel(newX, newY);
+                                redValues[index] = pixel.R;
+                                greenValues[index] = pixel.G;
+                                blueValues[index] = pixel.B;
+                                index++;
+                            }
+                        }
+
+                        Array.Sort(redValues);
+                        Array.Sort(greenValues);
+                        Array.Sort(blueValues);
+
+                        int medianR = redValues[4];
+                        int medianG = greenValues[4];
+                        int medianB = blueValues[4];
+
+                        resultImage.SetPixel(x, y, Color.FromArgb(medianR, medianG, medianB));
+                    }
+                }
+            }
+            else if (isRadioButton11Checked/*minimum*/)
+            {
+                for (int x = 0; x < originalImage.Width; x++)
+                {
+                    for (int y = 0; y < originalImage.Height; y++)
+                    {
+                        int minR = 255, minG = 255, minB = 255;
+
+                        for (int i = -1; i <= 1; i++)
+                        {
+                            for (int j = -1; j <= 1; j++)
+                            {
+                                int newX = Math.Min(Math.Max(x + i, 0), originalImage.Width - 1);
+                                int newY = Math.Min(Math.Max(y + j, 0), originalImage.Height - 1);
+                                pixel = originalImage.GetPixel(newX, newY);
+                                minR = Math.Min(minR, pixel.R);
+                                minG = Math.Min(minG, pixel.G);
+                                minB = Math.Min(minB, pixel.B);
+                            }
+                        }
+
+                        resultImage.SetPixel(x, y, Color.FromArgb(minR, minG, minB));
+                    }
+                }
+            }
+            else if (isRadioButton12Checked/*maksimum*/)
+            {
+                for (int x = 0; x < originalImage.Width; x++)
+                {
+                    for (int y = 0; y < originalImage.Height; y++)
+                    {
+                        int maxR = 0, maxG = 0, maxB = 0;
+
+                        for (int i = -1; i <= 1; i++)
+                        {
+                            for (int j = -1; j <= 1; j++)
+                            {
+                                int newX = Math.Min(Math.Max(x + i, 0), originalImage.Width - 1);
+                                int newY = Math.Min(Math.Max(y + j, 0), originalImage.Height - 1);
+                                pixel = originalImage.GetPixel(newX, newY);
+                                maxR = Math.Max(maxR, pixel.R);
+                                maxG = Math.Max(maxG, pixel.G);
+                                maxB = Math.Max(maxB, pixel.B);
+                            }
+                        }
+
+                        resultImage.SetPixel(x, y, Color.FromArgb(maxR, maxG, maxB));
+                    }
+                }
+            }
+
+
             return resultImage;
         }
         private void button1_Click(object sender, EventArgs e)
@@ -523,12 +610,107 @@ namespace filtry
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            Bitmap oryginalImage = new Bitmap(pictureBox1.Image);
-            pictureBox2.Image = maska(oryginalImage);
+           
+            if (pictureBox1.Image != null)
+            {
+                Bitmap oryginalImage = new Bitmap(pictureBox1.Image);
+                pictureBox2.Image = maska(oryginalImage);
+            }
+            else
+            {
+                MessageBox.Show("Nie wybrano obrazka!");
+            }
         }
         private void radioButton4_CheckedChanged(object sender, EventArgs e)
         {
 
         }
+
+        private void radioButton6_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButton10_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "C:\\Users\\micha\\Pictures\\test_images";
+                openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png| All files (*.*) | *.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    Bitmap image = new Bitmap(filePath);
+
+                    pictureBox3.Image = image;
+                    pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "C:\\Users\\micha\\Pictures\\test_images";
+                openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png| All files (*.*) | *.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    Bitmap image = new Bitmap(filePath);
+
+                    pictureBox4.Image = image;
+                    pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (pictureBox3.Image != null && pictureBox4.Image != null)
+            {
+                Bitmap originalImage = new Bitmap(pictureBox3.Image);
+                Bitmap subtractedImage = new Bitmap(pictureBox4.Image);
+                int width = Math.Min(originalImage.Width, subtractedImage.Width);
+                int height = Math.Min(originalImage.Height, subtractedImage.Height);
+
+                Bitmap resultImage = new Bitmap(width, height);
+
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        Color originalColor = originalImage.GetPixel(x, y);
+                        Color subtractedColor = subtractedImage.GetPixel(x, y);
+
+                        int grayOriginal = (int)((originalColor.R * 0.3) + (originalColor.G * 0.59) + (originalColor.B * 0.11));
+                        int graySubtracted = (int)((subtractedColor.R * 0.3) + (subtractedColor.G * 0.59) + (subtractedColor.B * 0.11));
+
+                        int difference = grayOriginal - graySubtracted;
+                        difference = Math.Max(0, difference); //łapanie wartości ujemnych
+
+                        Color resultColor = Color.FromArgb(difference, difference, difference);
+                        resultImage.SetPixel(x, y, resultColor);
+                    }
+                }
+
+                pictureBox5.Image = resultImage;
+                pictureBox5.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+            else
+            {
+                MessageBox.Show("Nie wybrano obrazków");
+            }
+        }
+
     }
 }
