@@ -118,18 +118,42 @@ namespace filtry
 
                 Bitmap resultImage = new Bitmap(width, height);
 
+                int shiftX = 0;
+                int shiftY = 0;
+
+                if (radioButton18.Checked)
+                {
+                    shiftX = 1; 
+                }
+                else if (radioButton19.Checked)
+                {
+                    shiftY = 1; 
+                }
+                else if (radioButton20.Checked)
+                {
+                    shiftX = 1; 
+                    shiftY = 1;
+                }
+
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
                     {
                         Color originalColor = originalImage.GetPixel(x, y);
-                        Color subtractedColor = subtractedImage.GetPixel(x, y);
+
+                        int shiftedX = x + shiftX;
+                        int shiftedY = y + shiftY;
+
+                        if (shiftedX >= width) shiftedX = width - 1;
+                        if (shiftedY >= height) shiftedY = height - 1;
+
+                        Color subtractedColor = subtractedImage.GetPixel(shiftedX, shiftedY);
 
                         int grayOriginal = (int)((originalColor.R * 0.3) + (originalColor.G * 0.59) + (originalColor.B * 0.11));
                         int graySubtracted = (int)((subtractedColor.R * 0.3) + (subtractedColor.G * 0.59) + (subtractedColor.B * 0.11));
 
                         int difference = grayOriginal - graySubtracted;
-                        difference = Math.Max(0, difference); //łapanie wartości ujemnych
+                        difference = Math.Max(0, difference); // Clamp negative values to 0
 
                         Color resultColor = Color.FromArgb(difference, difference, difference);
                         resultImage.SetPixel(x, y, resultColor);
@@ -259,10 +283,8 @@ namespace filtry
                     Gray2(image);
                 }
 
-                // Tworzymy tablicę na histogram
                 int[] histogram = new int[256];
 
-                // Obliczamy histogram dla odcieni szarości
                 for (int x = 0; x < image.Width; x++)
                 {
                     for (int y = 0; y < image.Height; y++)
@@ -273,21 +295,17 @@ namespace filtry
                     }
                 }
 
-                // Wyczyszczenie poprzednich danych z wykresu
                 chart1.Series[0].Points.Clear();
 
-                // Dodanie danych histogramu do wykresu
                 for (int i = 0; i < 256; i++)
                 {
                     chart1.Series[0].Points.AddXY(i, histogram[i]);
                 }
 
-                // Aktualizujemy wygląd wykresu
                 chart1.ChartAreas[0].AxisX.Minimum = 0;
                 chart1.ChartAreas[0].AxisX.Maximum = 255;
                 chart1.ChartAreas[0].AxisY.Minimum = 0;
 
-                // Aktualizujemy wyświetlany wykres
                 chart1.Invalidate();
 
                 pictureBox9.SizeMode = PictureBoxSizeMode.Zoom;
@@ -341,6 +359,98 @@ namespace filtry
             textBox93.Text = string.Format("{0:0.######}", yuvValues[0]);
             textBox94.Text = string.Format("{0:0.######}", yuvValues[1]);
             textBox95.Text = string.Format("{0:0.######}", yuvValues[2]);
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "C:\\Users\\micha\\Pictures\\test_images";
+                openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png| All files (*.*) | *.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    Bitmap image = new Bitmap(filePath);
+
+                    pictureBox10.Image = image;
+                    pictureBox10.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+            }
+        }
+        private void ColorChannelsFilter()
+        {
+            Bitmap originalImage = (Bitmap)pictureBox10.Image;
+
+            if (originalImage != null)
+            {
+                // Utwórz kopię oryginalnego obrazu
+                Bitmap filteredImage = new Bitmap(originalImage);
+
+                // Sprawdź, które kanały koloru mają być wyłączone
+                bool disableRed = checkBox1.Checked;
+                bool disableGreen = checkBox2.Checked;
+                bool disableBlue = checkBox3.Checked;
+
+                for (int y = 0; y < filteredImage.Height; y++)
+                {
+                    for (int x = 0; x < filteredImage.Width; x++)
+                    {
+                        Color pixel = filteredImage.GetPixel(x, y);
+                        Color newPixel = Color.FromArgb(
+                            disableRed ? 0 : pixel.R,
+                            disableGreen ? 0 : pixel.G,
+                            disableBlue ? 0 : pixel.B
+                        );
+                        filteredImage.SetPixel(x, y, newPixel);
+                    }
+                }
+
+                pictureBox11.Image = filteredImage;
+                pictureBox11.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox11.Refresh();
+            }
+        }
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            ColorChannelsFilter();
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            ColorChannelsFilter();
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            ColorChannelsFilter();
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "JPEG Image|*.jpg";
+                saveFileDialog.Title = "Save an Image File";
+                saveFileDialog.FileName = "filtered_image.jpg";
+                saveFileDialog.RestoreDirectory = true;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (pictureBox11.Image != null)
+                    {
+                        pictureBox11.Image.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                }
+            }
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            radioButton18.Checked = false;
+            radioButton19.Checked = false;
+            radioButton20.Checked = false;
         }
     }
 }
